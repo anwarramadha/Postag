@@ -97535,3 +97535,7 @@ Alabama,PUNCT,PROPN
 Amerika,PUNCT,PROPN
 Serikat,PROPN,PROPN
 (titik),PROPN,PUNCT
+Bisa,NULL,NOUN
+ular,NOUN,NOUN
+bisa,NOUN,ADV
+mematikan,ADV,VERB

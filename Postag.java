@@ -16,6 +16,8 @@ import java.util.*;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
+import weka.classifiers.Evaluation;
+import java.util.Random;
 
 public class Postag 
 {	
@@ -39,22 +41,28 @@ public class Postag
             this.cls = cls;
         }
     }
-    public static NaiveBayesMultinomialText classify_with_pre_tag(Instances data) {
-            try {
-                // train data
-                NaiveBayesMultinomialText nb = new NaiveBayesMultinomialText();
-                nb.buildClassifier(data);
-                System.out.println("Train done\n");
-                return nb;
-//                    System.out.println(eval.toSummaryString("\nResults\n======\n", false));
 
-            }
-            catch(Exception e) {
-                System.out.println(e.toString());
-                return null;
-            }
+    public static NaiveBayesMultinomialText classify_with_pre_tag(Instances data) {
+        try {
+
+            // train data
+            NaiveBayesMultinomialText nb = new NaiveBayesMultinomialText();
+            nb.buildClassifier(data);
+
+            System.out.println("Train done\n");
+            Evaluation eval = new Evaluation(data);
+            eval.crossValidateModel(nb, data, 10, new Random(1));
+            System.out.println(eval.toSummaryString("Result:\n", false));
+            return nb;
+
+        }
+        catch(Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
     }
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception {
         System.out.println("Nama dataset: tag_ID.arff");
         Scanner sc = new Scanner(System.in);
@@ -64,7 +72,7 @@ public class Postag
         Instances data = new Instances(reader);
         reader.close();
         data.setClassIndex(data.numAttributes() - 1);
-        NaiveBayesMultinomialText nb =  Postag.classify_with_pre_tag(data);
+        NaiveBayesMultinomialText nb =  Postag.classify_with_pre_tag(data); 
 
         System.out.println("Masukkan text : ");
         String str = sc.nextLine();
@@ -171,5 +179,6 @@ public class Postag
 
         System.out.print(" ");
         for(int i=0; i < count_dash; i++) System.out.print("-");
+        System.out.println();
     }
 }
